@@ -5,20 +5,12 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
-const auth = require('../middleware/auth')
 
 // @route   GET api/auth
 // @desc    login a user
 // @access  Private
-router.get('/', auth, async (req, res) => {
-    try {
-        const user = await User.findOne({ id: req.user.id }).select('-password');
-        return res.json(user);
-    } catch (err) {
-        console.log(err.message);
-        return res.status(500).send('Server error');
-    }
-
+router.get('/', (req, res) => {
+    res.send('login a user');
 })
 
 // @route   POST api/auth
@@ -33,8 +25,8 @@ router.post('/', [
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email, password } = req.body;
     try {
+        const { email, password } = req.body;
         let user = await User.findOne({ email });
         if (!user || !(await bcrypt.compare(password, user.password))) return res.status(400).send('Invalid user name or password');
         const payload = {
