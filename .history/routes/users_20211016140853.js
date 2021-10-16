@@ -29,9 +29,7 @@ router.post('/', [
         user.password = await bcrypt.hash(password, await bcrypt.genSalt(10));
         await user.save();
         const payload = {
-            user: {
-                id: user.id
-            }
+            user: { id: user.id }
         }
         jwt.sign(payload, config.get('jwtSecret'), { expiresIn: 360000 }, (err, token) => {
             if (err) throw err;
