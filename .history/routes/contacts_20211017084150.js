@@ -19,7 +19,6 @@ router.get('/', auth, async (req, res) => {
 router.post('/', [auth, [
     check('name', 'name is required').not().isEmpty(),
     check('email', 'enter valid email').isEmail(),
-    check('phone', 'phone number is required').not().isEmpty()
 ]], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -67,25 +66,6 @@ router.put('/:id', [auth, [
 
         contact = await Contact.findByIdAndUpdate(req.params.id, { $set: contactFields }, { new: true });
         return res.json(contact);
-    }
-    catch (err) {
-        console.log(err.message);
-        return res.status(500).send('Server Error');
-    }
-})
-
-// @route   DELETE api/contacts
-// @desc    delete a existing contact 
-// @access  Private
-router.delete('/:id', auth, async (req, res) => {
-    try {
-        const contact = await Contact.findById(req.params.id);
-        if (!contact) return res.status(404).send('No such contact exists');
-
-        if (req.user.id !== contact.user.toString()) return res.status(401).send('Not Authorised');
-
-        await Contact.findByIdAndRemove(req.params.id);
-        return res.send('contact removed');
     }
     catch (err) {
         console.log(err.message);
