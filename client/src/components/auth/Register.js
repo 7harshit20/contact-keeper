@@ -1,9 +1,20 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import AlertContext from '../../context/alert/AlertContext'
+import Authcontext from '../../context/auth/AuthContext';
 
-const Register = () => {
+const Register = props => {
+    const authcontext = useContext(Authcontext);
+    const { register, error, clearError, isAuthenicated } = authcontext;
     const alertContext = useContext(AlertContext);
     const { setAlert } = alertContext;
+
+    useEffect(() => {
+        if (isAuthenicated) props.history.push('/');
+        if (error) setAlert(error, 'danger');
+        clearError();
+        // eslint-disable-next-line
+    }, [error, isAuthenicated, props.history]);
+
     const [user, setUser] = useState({
         name: '',
         email: '',
@@ -19,7 +30,9 @@ const Register = () => {
         if (name === '' || email === '' || password === '') setAlert('Please fill all fields', 'danger');
         else if (password.length < 6) setAlert('Minimum length of password should be 6', 'danger')
         else if (password !== password2) setAlert('Passwords do not match', 'danger');
-        else console.log('register user', user);
+        else {
+            register(user);
+        }
     }
     return (
         <div className="form-container">

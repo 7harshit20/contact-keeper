@@ -11,7 +11,7 @@ const auth = require('../middleware/auth');
 router.get('/', auth, async (req, res) => {
     const contacts = await Contact.find({ user: req.user.id }).sort({ data: -1 });
     res.json(contacts);
-})
+});
 
 // @route   POST api/contacts
 // @desc    add a new contact 
