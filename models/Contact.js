@@ -13,8 +13,9 @@ const ContactSchema = {
         type: String,
         required: true
     },
-    number: {
-        type: Number
+    phone: {
+        type: String,
+        required: true
     },
     type: {
         type: String,
